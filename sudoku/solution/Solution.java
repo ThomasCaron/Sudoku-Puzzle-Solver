@@ -41,40 +41,46 @@ public class Solution {
         ArrayList<Box> adjBoxes = new ArrayList<Box>();
         
         //grab the row of boxes to the left and/or right of the current box, (bnum)
-        int div3 = bnum/3;
-        if(div3==0){
-            for(int i=0; i<3; i++){
-//                if(i!=bnum) adjBoxes.add(boxes[i]);
-                adjBoxes.add(boxes[i]);
+        if(bnum>=0 && bnum<=8){
+            int div3 = bnum/3;
+            if(div3==0){
+                for(int i=0; i<3; i++){
+    //                if(i!=bnum) adjBoxes.add(boxes[i]);
+                    adjBoxes.add(boxes[i]);
+                }
+            }
+            else if(div3==1){
+                for(int i=3; i<6; i++){
+    //                if(i!=bnum) adjBoxes.add(boxes[i]);
+                    adjBoxes.add(boxes[i]);            } 
+            }
+            else if(div3==2){
+                for(int i=6; i<9; i++){
+    //                if(i!=bnum) adjBoxes.add(boxes[i]);
+                    adjBoxes.add(boxes[i]);            }
+            }
+
+            //grab the boxes in bnum's column but does not exclude bnum
+            int mod3 = bnum%3;
+            if(mod3==0){
+                for(int i=0; i<=6; i+=3){
+    //                if(i!=bnum) adjBoxes.add(boxes[i]);
+                    adjBoxes.add(boxes[i]);            }
+            }
+            else if(mod3==1){
+                for(int i=1; i<=7; i+=3){
+    //                if(i!=bnum) adjBoxes.add(boxes[i]);
+                    adjBoxes.add(boxes[i]);            }
+            }
+            else if(mod3==2){
+                for(int i=2; i<=8; i+=3){
+    //                if(i!=bnum) adjBoxes.add(boxes[i]);
+                    adjBoxes.add(boxes[i]);            }
             }
         }
-        else if(div3==1){
-            for(int i=3; i<6; i++){
-//                if(i!=bnum) adjBoxes.add(boxes[i]);
-                adjBoxes.add(boxes[i]);            } 
-        }
-        else if(div3==2){
-            for(int i=6; i<9; i++){
-//                if(i!=bnum) adjBoxes.add(boxes[i]);
-                adjBoxes.add(boxes[i]);            }
-        }
-        
-        //grab the boxes in bnum's column but does not exclude bnum
-        int mod3 = bnum%3;
-        if(mod3==0){
-            for(int i=0; i<=6; i+=3){
-//                if(i!=bnum) adjBoxes.add(boxes[i]);
-                adjBoxes.add(boxes[i]);            }
-        }
-        else if(mod3==1){
-            for(int i=1; i<=7; i+=3){
-//                if(i!=bnum) adjBoxes.add(boxes[i]);
-                adjBoxes.add(boxes[i]);            }
-        }
-        else if(mod3==2){
-            for(int i=2; i<=8; i+=3){
-//                if(i!=bnum) adjBoxes.add(boxes[i]);
-                adjBoxes.add(boxes[i]);            }
+        else{
+            System.out.println("somehow getBoxesInbnumsRowAndCol was sent a box number"
+                    + "that is out of the range of 0-8 inclusive");
         }
         return adjBoxes;
     }
@@ -217,7 +223,8 @@ Cell object's possibleNums ArrayList.       */
 //step throw the Row, and at each Cell/index remove the value num from the possibleNums ArrayList.                     
                     for(int i=0; i<9; i++){
                         if(rows[index].numberList[i].possibleNums.size()==1) {
-                            System.out.println("Warning on line 220. Trying to remove the last value in a possibleNums ArrayList");}
+//                            System.out.println("Warning on line 220. Trying to remove the last value in a possibleNums ArrayList");
+                        }
                         rows[index].numberList[i].possibleNums.remove(Integer.valueOf(num));
                     }
                 }//end of the Row elimination of the value num. now using "index" to be the index for the Column part
@@ -227,7 +234,8 @@ Cell object's possibleNums ArrayList.       */
 //step throw the Col, and at each Cell/index remove the value num from the possibleNums ArrayList.                     
                     for(int i=0; i<9; i++){
                         if(cols[index].numberList[i].possibleNums.size()==1) {
-                            System.out.println("Warning on line 230. Trying to remove the last value in a possibleNums ArrayList");}
+//                            System.out.println("Warning on line 236. Trying to remove the last value in a possibleNums ArrayList");
+                        }
                         cols[index].numberList[i].possibleNums.remove(Integer.valueOf(num));
                     }
                 }
@@ -392,7 +400,7 @@ because of the 1 in box 0 and its middle row is filled. Therefore in box 2, 1 mu
             }
             //test to see if the solution is full yet
             boolean testisFull = isFull();
-            System.out.println("on line 395 of solution,  isFull=="+testisFull);
+//            System.out.println("on line 395 of solution,  isFull=="+testisFull);
         }while(isDone==false);
         // if the check is done, isDone==true, check to see if the grid is full
         boolean full=isFull();

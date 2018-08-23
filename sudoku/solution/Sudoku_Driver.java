@@ -7,7 +7,7 @@ import java.util.logging.*;
  *
  * @author Thomas Caron
  */
-public class Sudoku_Driver {
+public class Sudoku_Driver/*afterJunitTest*/ {
 
     /**
      * This is the skeleton of the program. 
@@ -19,7 +19,9 @@ public class Sudoku_Driver {
         //Prompts the user to enter the name of a Sudoku file. The main method will then call readInFile(String filename)
         //that reads it in, and turn it into one string.
         //That string will be used to create
-        System.out.println("please insert the name of the Sudoku text file, without the \".txt\" extension to begin.");
+        System.out.println("please insert the full file path of the Sudoku text file, including the \".txt\" extension to begin. \n");
+        System.out.println("for example: C:\\Users\\my pc\\Documents\\a JOBS\\Summer Jobs 2018\\GAVANT code challenge\\puzzle5.txt");
+        
         Scanner filein = new Scanner(System.in);
         String fileIn=filein.nextLine();
         String stringReadIn = readInFile(fileIn);
@@ -46,14 +48,18 @@ public class Sudoku_Driver {
      * This method uses the java.io inport and reads in the file by turning it into one
      * 80 character long string.
      * 
-     * @param filename What the user typed in as the file name.
+     * @param filePath What the user typed in as the file name.
      * 
      * @return The 80 character long string.
      */
-    private static String readInFile(String filename) {
-        String str=""; 
+    public static String readInFile(String filePath) {
+        String fileName="";
+        String str="";
         try {
-            File file = new File("C:\\Users\\my pc\\Documents\\a JOBS\\Summer Jobs 2018\\GAVANT code challenge\\"+filename+".txt");
+            File file = new File(filePath);
+            //if the file path works, then pull the file name out of the path excluding the extension.
+            fileName = getFileName(filePath);
+            
             Scanner scan = new Scanner(file);
             
             //make a while loop so that you can fill stringReadIn with the numbers from every line in the file
@@ -62,14 +68,14 @@ public class Sudoku_Driver {
             }
             
         } catch (FileNotFoundException ex) {
-            if(filename.contains(".txt")){
+            if(fileName.contains(".")){
                 System.out.println("There was an error reading in the file. \n"
-                + "The name you entered contained \".txt\" wich the program already includes for you."
-                        + "Please make sure the you do not include the \".txt\" extension");
+                + "In the filepath, the file name contains a \'.\' . So the name of the file looks something like filename.something.txt \n"
+                        + "Please rename the file so that it follows standard file naming conventions.");
             }
             else{
-                System.out.println("There was an error reading in the file: "+filename+". "
-                + "Try making sure that is located in the correct folder.");
+                System.out.println("There was an error reading in the file from: "+filePath+". \n"
+                + "Try making sure that you are entering the correct file path.");
             }
             
             Logger.getLogger(Sudoku_Driver.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,7 +89,7 @@ public class Sudoku_Driver {
      * @param str The string that was read in from the file. It will be used to fill the GridRows with its initial numbers.
      * @return It returns a 2d array of Cell objects used to fill the critical GridRows Variable
      */
-    private static Row[] fillGridRows(String str) {
+    public static Row[] fillGridRows(String str) {
         
         
         //uses a nested 'for' loop to fill the grid. 
@@ -154,7 +160,7 @@ public class Sudoku_Driver {
      * @param Row[] rows. The array of Row objects just created. It will be used to fill the GridCols with its initial numbers.
      * @return It returns a 2d array of Cell objects. 
      */
-    private static Column[] fillGridCol(Row[] rows) {
+    public static Column[] fillGridCol(Row[] rows) {
         /*
         need to make a grid of Columns to be able to meet the constraint of no repeating numbers in a column
         as well as completing tasks that could be done with just the GridRows, but would be easier to follow with the use of this 2d array.
@@ -183,7 +189,7 @@ public class Sudoku_Driver {
      * @param rows The 2d array GridRows
      * @return A 2d array of Box objects.
      */
-    private static Box[] fillGridBoxs(Row[] rows) {
+    public static Box[] fillGridBoxs(Row[] rows) {
         //the index 'bnum' stands for and corresponds to box number.  
         
         /*
@@ -251,4 +257,47 @@ public class Sudoku_Driver {
            }
         }
     }
+
+    /**
+     * Retrieves the name of the file from the filePath String.
+     * Runs if and only if the file path, filePath, exists. 
+     * @param filePath the file path the user entered into the program.
+     * @return The name of the file that is being read in to the Sudoku solver. If the file contains a '.' in it, then this 
+     * method returns "".
+     */
+    public static String getFileName(String filePath) {
+        String fileName="";
+        //if the file path works, then pull the file name out of the path excluding the extension.
+        int lastSlashCharLoc=-1;
+        int extensionBeginLoc=-1;
+        //first find the location of the last '\' as that will indicate the file name will start on the next char
+        for(int i=filePath.length()-1; i>0; i--){
+            if(filePath.charAt(i)=='\\'){
+                lastSlashCharLoc=i+1;
+                //make i=0 so that it breaks out of the loop
+                i=0;
+            }
+        }
+        //now find where the extension begins
+        for(int i=filePath.length()-1; i>0; i--){
+            //do not need to check for the case of "fileName.extension".txt because it is in the catch statement
+            if(filePath.charAt(i)=='.' && i!=filePath.length()-1){
+                extensionBeginLoc=i;
+                //make i=0 so that it breaks out of the loop
+                i=0;
+            }
+        }
+        fileName = filePath.substring(lastSlashCharLoc, extensionBeginLoc);
+
+
+        if(fileName.contains(".")){
+            System.out.println("There was an error reading in the file. \n"
+            + "In the filepath, the file name contains a \'.\' , So please rename the file so that it follows standard file naming conventions.");
+            //set fileName back to "".
+            fileName = "";
+        }
+        return fileName;
+    }
+    
+    
 }
